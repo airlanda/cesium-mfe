@@ -1,0 +1,149 @@
+{
+  "name": "chewiesium",
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "first-angular-mfe-tutorial",
+  "sourceRoot": "chewiesium/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/chewiesium",
+        "index": "chewiesium/src/index.html",
+        "main": "chewiesium/src/main.ts",
+        "polyfills": [
+          "zone.js"
+        ],
+        "tsConfig": "chewiesium/tsconfig.app.json",
+        "assets": [
+          "chewiesium/src/favicon.ico",
+          "chewiesium/src/assets",
+          {
+            "glob": "**/*",
+            "input": "chewiesium/src/assets/Workers",
+            "output": "assets/cesium/Workers"
+          },
+          {
+            "glob": "**/*",
+            "input": "chewiesium/src/assets/ThirdParty",
+            "output": "assets/ThirdParty"
+          },
+          {
+            "glob": "**/*",
+            "input": "node_modules/cesium/Build/Cesium/Assets",
+            "output": "assets/cesium/Assets"
+          },
+          {
+            "glob": "**/*",
+            "input": "chewiesium/src/assets/Widgets/Widgets",
+            "output": "assets/cesium/Widgets"
+          }
+        ],
+        "styles": [
+          "chewiesium/src/assets/Widgets/widgets.css",
+          "chewiesium/src/styles.css"
+        ],
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "chewiesium/webpack.config.js"
+        },
+        "commonChunk": false
+      },
+      "allowedCommonJsDependencies": [
+        "dompurify",
+        "protobufjs",
+        "mersenne-twister",
+        "earcut",
+        "rbush",
+        "urijs",
+        "grapheme-splitter",
+        "nosleep.js",
+        "bitmap-sdf"
+     ],
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "chewiesium/webpack.prod.config.js"
+          }
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@nx/angular:webpack-dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "chewiesium:build:production"
+        },
+        "development": {
+          "browserTarget": "chewiesium:build:development"
+        }
+      },
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4777,
+        "publicHost": "http://localhost:4777"
+      }
+    },
+    "extract-i18n": {
+      "executor": "ngx-build-plus:extract-i18n",
+      "options": {
+        "browserTarget": "chewiesium:build",
+        "extraWebpackConfig": "chewiesium/webpack.config.js"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "chewiesium/**/*.ts",
+          "chewiesium/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "chewiesium/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  }
+}
